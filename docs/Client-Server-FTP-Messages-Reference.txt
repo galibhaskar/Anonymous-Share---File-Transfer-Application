@@ -1,0 +1,157 @@
+NLST
+Syntax: NLST [remote-directory]
+Returns a list of filenames in the given directory (defaulting to the current directory), with no other information. Must be preceded by a PORT or PASV command.
+
+---------------------------------------------------------------------------------------------------------
+
+MKD
+Syntax: MKD remote-directory
+Creates the named directory on the remote host
+
+Request:
+XMKD [directory-name]\r\n
+
+Response code:
+257 "/test" created\r\n
+
+550 Create directory operation failed.\r\n
+
+---------------------------------------------------------------------------------------------------------
+
+LIST
+Syntax: LIST [remote-filespec]
+If remote-filespec refers to a file, sends information about that file. If remote-filespec refers to a directory, sends information about each file in that directory. remote-filespec defaults to the current directory. This command must be preceded by a PORT or PASV command.
+
+Request code:
+PORT 192,168,1,65,100,107\r\n
+
+response:
+200 PORT command successful. Consider using PASV.\r\n
+
+LIST\r\n -> listing the files in root directory
+
+LIST directory-name\r\n 
+
+Response code:
+150 Here comes the directory listing.\r\n
+226 Directory send OK.\r\n
+
+---------------------------------------------------------------------------------------------------------
+
+USER
+Syntax: USER username
+Send this command to begin the login process. username should be a valid username on the system, or "anonymous" to initiate an anonymous login.
+
+response code:
+331 Please specify the password\r\n
+
+---------------------------------------------------------------------------------------------------------
+
+PASS
+Syntax: PASS password
+After sending the USER command, send this command to complete the login process. (Note, however, that an ACCT command may have to be used on some systems.)
+
+Response code:
+230 Login successful\r\n
+
+530 Login incorrect\r\n
+
+
+---------------------------------------------------------------------------------------------------------
+
+QUIT
+Syntax: QUIT
+Terminates the command connection.
+
+response code:
+221 Goodbye\r\n
+
+
+---------------------------------------------------------------------------------------------------------
+
+RETR
+Syntax: RETR remote-filename
+Begins transmission of a file from the remote host. Must be preceded by either a PORT command or a PASV command to indicate where the server should send data.
+
+example:
+
+    PORT 192,168,1,65,106,37\r\n
+    
+        200 PORT command successful. Consider using PASV.\r\n
+
+    RETR 1.png\r\n
+
+    open data connection
+
+        150 Opening BINARY mode data connection for 1.png (2745 bytes).\r\n
+
+    -data transfer(client to server)
+
+    close data connection(client)
+
+        226 Transfer complete.\r\n(server)
+
+---------------------------------------------------------------------------------------------------------
+
+SIZE
+Syntax: SIZE remote-filename
+Returns the size of the remote file as a decimal number.
+
+---------------------------------------------------------------------------------------------------------
+
+STOR
+Syntax: STOR remote-filename
+Begins transmission of a file to the remote site. Must be preceded by either a PORT command or a PASV command so the server knows where to accept data from.
+
+example:
+
+    PORT 192,168,1,65,106,37\r\n
+    
+        200 PORT command successful. Consider using PASV.\r\n
+
+    STOR test.md\r\n
+
+    open data connection
+
+        150 Ok to send data.\r\n(server)
+
+    -data transfer(client to server)
+
+    close data connection(client)
+
+        226 Transfer complete.\r\n(server)
+
+---------------------------------------------------------------------------------------------------------
+
+STRU
+Syntax: STRU structure-character
+Sets the file structure for transfer to one of:
+
+F - File (no structure)
+R - Record structure
+P - Page structure
+The default structure is File.
+
+---------------------------------------------------------------------------------------------------------
+
+
+PORT
+Syntax: PORT a1,a2,a3,a4,p1,p2
+Specifies the host and port to which the server should connect for the next file transfer. This is interpreted as IP address a1.a2.a3.a4, port p1*256+p2.
+
+
+PORT 192,168,1,65,99,157\r\n
+
+Response code:
+200 PORT command successful. Consider using PASV.\r\n
+
+---------------------------------------------------------------------------------------------------------
+
+CWD
+Syntax: CWD remote-directory
+Makes the given directory be the current directory on the remote host.
+
+
+CWD test1\r\n
+    250 Directory successfully changed.\r\n
+

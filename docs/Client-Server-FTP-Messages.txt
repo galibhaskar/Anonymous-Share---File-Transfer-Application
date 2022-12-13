@@ -1,0 +1,135 @@
+make the port number of server 21
+
+220 Welcome to the FTP Server\r\n
+
+
+{
+    "Response Code": 220 ,
+    "Response Argument": "Welcome to the FTP Server",
+    "Response Message":""
+}
+
+
+{
+    "Request Command": "RETR" ,
+    "Request Argument": "1.png"
+}
+
+
+
+Upload(files, storage_path, expiry_date):
+
+        (client->server) : MKD <storage_path>
+            257 <storage_path> created(server->client)
+
+            550 Create directory operation failed.\r\n(server->client)
+
+        (client->server) : SETEXPIRY <storage_path> <expiry_date>
+            000 expiry_date set(server->client)
+        
+        (client->server) : CWD <storage_path>\r\n
+            250 Directory successfully changed.\r\n(server->client)
+
+            550 Failed to change directory.\r\n(server->client)
+
+        for file_name in files:
+
+            *************storing file**************
+
+                (client->server): PORT 192,168,1,65,106,37\r\n
+                
+                    200 PORT command successful. Consider using PASV.\r\n(server->client)
+
+                (client->server) : STOR <file_name>\r\n
+
+                (client->server) :open data connection
+
+                    150 Ok to send data.\r\n(server->client)
+
+                (client->server): -data transfer(client to server)
+
+                (client->server) : close data connection
+
+                    226 Transfer complete.\r\n(server->client)
+
+            *************storing file**************
+
+
+
+
+download(files, storage_path):
+    (client->server) : CWD <storage_path>\r\n
+            250 Directory successfully changed.\r\n(server->client)
+
+            550 Failed to change directory.("Response Message":Invalid storage path/storage path expired)\r\n(server->client)
+
+    for file_name in files:
+
+        *************retrieving file**************
+            (client->server) : PORT 192,168,1,65,106,37\r\n
+            
+                200 PORT command successful. Consider using PASV.\r\n(server->client)
+
+            (client->server) :RETR <file_name>\r\n
+
+            (client->server) :open data connection
+
+                150 Opening BINARY mode data connection for <file_name> (2745 bytes).\r\n(server->client)
+
+            (client->server) :-data transfer
+
+            (client->server) :close data connection
+
+                226 Transfer complete.\r\n(server->client)
+
+        *************retrieving file**************
+
+view(storage_path):
+    (client->server) : CWD <storage_path>\r\n
+            250 Directory successfully changed.\r\n(server->client)
+
+            550 Failed to change directory.("Response Message":Invalid storage path/storage path expired)\r\n(server->client)
+
+    *************listing file**************
+            (client->server) : PORT 192,168,1,65,106,37\r\n
+            
+                200 PORT command successful. Consider using PASV.\r\n(server->client)
+
+            (client->server) :LIST <storage_path>\r\n
+
+            (client->server) :open data connection
+
+                150 Here comes the directory listing.\r\n(server->client)
+
+            (client->server) :-data transfer
+
+            (client->server) :close data connection
+
+                226 Directory send OK.\r\n(server->client)
+
+    *************listing file**************
+
+
+connect():
+    server listening at ip_address and port=21
+    
+    client connection established
+
+    (server->client): 220 Service ready for new user; Welcome to FTP server\r\n
+
+    (client->server): OPTS UTF8 ON\r\n
+        200 Always in UTF8 mode.\r\n(server->client)
+
+    (client->server):USER anonymous\r\n
+        331 Please specify the password.\r\n(server->client)
+    
+    (client->server): PASS rNrKYTX9g7z3RgJRmxWuGHbeu\r\n
+        230 Login successful.\r\n(server->client)
+
+quit():
+    (client->server) : QUIT\r\n
+        
+        close the connection
+
+        221 Goodbye.\r\n(server->client)
+    

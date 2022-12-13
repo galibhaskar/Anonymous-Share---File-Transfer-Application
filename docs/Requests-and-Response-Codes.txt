@@ -1,0 +1,40 @@
+
+Request Commands:
+MKD <storage_path>
+SETEXPIRY <storage_path> <expiry_date>
+CWD <storage_path>
+PORT <h1>,<h2>,<h3>,<h4>,<p1>,<p2>
+STOR <file_name>
+RETR <file_name>
+LIST <storage_path>
+OPTS UTF8 ON
+USER anonymous
+PASS ""
+QUIT
+
+Response Messages:
+
+000 Expiration date set.
+001 Expiration date set failed.
+150 Ok to send data.
+150 Here comes the directory listing.
+150 Opening BINARY mode data connection for <file_name>
+200 PORT command successful. Consider using PASV.
+200 Always in UTF8 mode.
+220 Service ready for new user; Welcome to FTP server.
+221 Goodbye.
+226 Transfer complete.
+226 Directory send OK.
+230 Login successful.
+250 Directory successfully changed.
+257 <storage_path> created.
+331 Please specify the password.
+425 Can't open data connection.
+426 Transfer aborted.
+451 Requested action aborted: local error in processing.
+500 Connection Close Error.
+502 Command not implemented.
+530 Login failed.
+550 Failed to change directory.
+550 Create directory operation failed.
+550 Requested action not taken. File unavailable (e.g., file not found, no access).
